@@ -113,3 +113,45 @@ Nenhum framework ou biblioteca externa foi utilizado no frontend, demonstrando d
 ## 🔧 Estrutura do Projeto
 
 O projeto segue uma estrutura organizada e de fácil manutenção:
+
+```
+📁 raiz
+┣ 📄 index.html # Documento HTML principal
+┣ 📄 styles.css # Estilos CSS em seções numeradas
+┣ 📄 scripts.js # JavaScript modular e estruturado
+┣ 📁 api
+┃ ┣ 📄 config.php # Configurações do backend
+┃ ┣ 📄 funcoes.php # Funções utilitárias
+┃ ┣ 📄 .env # Variáveis de ambiente (não versionado)
+┃ ┣ 📄 registrar-visitante.php # Endpoint de tracking
+┃ ┗ 📄 processar-formulario.php # Endpoint do formulário
+┣ 📁 assets
+┃ ┣ 📁 img # Imagens otimizadas em WebP
+┃ ┗ 📁 termos # Documentos de termos e políticas
+┗ 📄 README.md # Documentação do projeto
+```
+
+## 🚦 Performance e Otimização
+
+- **Carregamento otimizado** de recursos estáticos
+- **Compressão de imagens** em formato WebP
+- **Scripts modulares** para melhor performance
+- **Redução de repaints e reflows** nas animações
+- **Lazy loading** para carregamento sob demanda
+- **Ocultação do cursor personalizado** em dispositivos touch
+
+## 📋 Implementações Destacadas
+
+- **Sistema de Tracking Personalizado**: Coleta de dados com consentimento LGPD e notificação em tempo real via Discord
+- **Cursor Personalizado**: Implementação elegante com diferentes estados para cada contexto de interação
+- **Modal LGPD**: Gerenciamento completo de consentimento com carregamento dinâmico dos termos
+- **Gerenciador de Ferramentas de Tracking**: Integração condicional com Microsoft Clarity e PostHog
+- **Formulário de Contato**: Sistema completo desde validação frontend até armazenamento seguro e integração com WhatsApp
+
+## 🧾 Licença
+
+Esse projeto está sob a licença MIT.
+
+<p align="center">
+  <img alt="License" src="https://img.shields.io/static/v1?label=license&message=MIT&color=49AA26&labelColor=000000">
+</p>
