@@ -17,7 +17,7 @@ Header set X-Frame-Options "DENY"
 Header set X-XSS-Protection "1; mode=block"
 Header set Referrer-Policy "strict-origin-when-cross-origin"
 
-# ----------------- CORS E API - MODIFICADO -----------------
+# ----------------- CORS E API -----------------
 # Configuração CORS mais flexível
 Header always set Access-Control-Allow-Origin "https://evertonsilvaoficial.com.br"
 Header always set Access-Control-Allow-Methods "POST, OPTIONS, GET"
@@ -42,6 +42,14 @@ php_value error_reporting 1
 php_flag display_errors On
 php_flag log_errors On
 php_value error_log "../api_errors.log"
+
+# ----------------- PERMITIR REGISTRO DE VISITANTES -----------------
+# Garantir acesso ao endpoint de registro de visitantes
+<Files "registrar-visitante.php">
+    Require all granted
+    SetEnvIf Origin "https://evertonsilvaoficial\.com\.br" IS_CORS=1
+    Header always set Access-Control-Allow-Origin "https://evertonsilvaoficial.com.br" env=IS_CORS
+</Files>
 
 # ----------------- PERMITIR PROCESSAMENTO DE FORMULÁRIO -----------------
 # Garantir acesso ao endpoint de processamento de formulário
