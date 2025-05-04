@@ -1,0 +1,1000 @@
+/*
+* Estilos para o site hub de links do Everton Silva
+* Desenvolvido por Jota / José Guilherme Pandolfi - Agência m2a
+* www.agenciam2a.com.br
+*/
+
+/* ----------------- 1. Variáveis CSS ----------------- */
+:root {
+    /* Paleta de cores Everton Silva */
+    --cor-verde-escuro: #22543D;
+    --cor-amarelo-ouro: #FFD700;
+    --cor-vermelho: #C0392B;
+    --cor-bege: #F5E9DA;
+    --cor-preto: #222222;
+    
+    /* Cores do tema */
+    --cor-bg-primaria: var(--cor-bege);
+    --cor-bg-secundaria: #ffffff;
+    --cor-bg-terciaria: #f8f4ee;
+    --cor-bg-cartao: #ffffff;
+    
+    --cor-texto-primaria: var(--cor-preto);
+    --cor-texto-secundaria: #555555;
+    --cor-texto-terciaria: #777777;
+    
+    --cor-destaque: var(--cor-verde-escuro);
+    --cor-destaque-hover: var(--cor-vermelho);
+    --cor-borda: #dddddd;
+    
+    /* Gradientes */
+    --gradiente-botao: linear-gradient(45deg, var(--cor-verde-escuro), #306b5e);
+    --gradiente-hover: linear-gradient(45deg, var(--cor-vermelho), #e74c3c);
+    
+    /* Tipografia */
+    --fonte-titulos: 'Montserrat', sans-serif;
+    --fonte-texto: 'Roboto', sans-serif;
+    
+    /* Dimensões */
+    --espaco-padrao: 60px;
+    --espaco-medio: 30px;
+    --espaco-pequeno: 15px;
+    --borda-radius: 12px;
+    --largura-maxima: 600px;  /* Largura máxima do container principal */
+    
+    /* Sombras */
+    --sombra-suave: 0 5px 15px rgba(0, 0, 0, 0.1);
+    --sombra-media: 0 8px 20px rgba(0, 0, 0, 0.15);
+    --sombra-elevada: 0 10px 30px rgba(0, 0, 0, 0.2);
+    
+    /* Transições */
+    --transicao-padrao: all 0.3s ease;
+    --transicao-lenta: all 0.5s ease;
+}
+
+/* ----------------- 2. Reset e Estilos Globais ----------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%; /* 1rem = 10px */
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: var(--cor-destaque) var(--cor-bg-secundaria);
+}
+
+body {
+    font-family: var(--fonte-texto);
+    font-size: 1.6rem;
+    line-height: 1.6;
+    color: var(--cor-texto-primaria);
+    background-color: var(--cor-bg-primaria);
+    overflow-x: hidden;
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('assets/img/fundo.webp');
+    background-repeat: repeat;
+    opacity: 0.1;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.container-hub, header, section, footer {
+    position: relative;
+    z-index: 1;
+}
+
+::selection {
+    background: var(--cor-destaque);
+    color: #ffffff;
+}
+
+::-moz-selection { /* Específico para Firefox */
+    background-color: var(--cor-destaque);
+    color: #ffffff;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--cor-bg-secundaria);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--cor-destaque);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--cor-destaque-hover);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--fonte-titulos);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 1.5rem;
+    color: var(--cor-texto-primaria);
+}
+
+h1 {
+    font-size: 3.2rem;
+    font-weight: 800;
+}
+
+h2 {
+    font-size: 2.8rem;
+}
+
+h3 {
+    font-size: 2.2rem;
+}
+
+p {
+    margin-bottom: 2rem;
+    color: var(--cor-texto-secundaria);
+}
+
+a {
+    color: var(--cor-destaque);
+    text-decoration: none;
+    transition: var(--transicao-padrao);
+}
+
+a:hover {
+    color: var(--cor-destaque-hover);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+button {
+    font-family: var(--fonte-titulos);
+    cursor: pointer;
+    border: none;
+    outline: none;
+    background: none;
+}
+
+section {
+    padding: var(--espaco-padrao) 0;
+}
+
+.container-hub {
+    width: 90%;
+    max-width: var(--largura-maxima);
+    margin: 0 auto;
+    padding: var(--espaco-medio) 0;
+    position: relative;
+}
+
+.titulo-secao {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+    display: inline-block;
+    font-family: var(--fonte-titulos);
+    font-weight: 700;
+    color: var(--cor-destaque);
+}
+
+.titulo-secao::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background-color: var(--cor-destaque);
+}
+
+/* Botões */
+.botao-primario, .botao-secundario {
+    display: inline-block;
+    padding: 1.2rem 3rem;
+    border-radius: var(--borda-radius);
+    font-family: var(--fonte-titulos);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+    transition: var(--transicao-padrao);
+    border: 2px solid transparent;
+    width: 100%;
+    text-align: center;
+}
+
+.botao-primario {
+    background: var(--gradiente-botao);
+    color: white;
+}
+
+.botao-primario:hover {
+    background: var(--gradiente-hover);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: var(--sombra-media);
+}
+
+.botao-secundario {
+    background-color: transparent;
+    color: var(--cor-texto-primaria);
+    border: 2px solid var(--cor-destaque);
+}
+
+.botao-secundario:hover {
+    background-color: var(--cor-destaque);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: var(--sombra-suave);
+}
+
+/* ----------------- 3. Preloader ----------------- */
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--cor-bg-primaria);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    cursor: none;
+}
+
+.logo-animacao {
+    animation: pulsar 1.5s infinite;
+}
+
+@keyframes pulsar {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+}
+
+/* ----------------- 4. Barra de Carregamento ----------------- */
+.barra-carregamento-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background-color: transparent;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.barra-carregamento-container.visivel {
+    opacity: 1;
+}
+
+.barra-carregamento {
+    height: 100%;
+    width: 0%; /* Começa com largura 0 */
+    background-color: var(--cor-destaque); 
+    transition: width 0.4s ease-in-out;
+    border-radius: 0 2px 2px 0;
+}
+
+.barra-carregamento::after {
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.2); /* Brilho suave */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.barra-carregamento-container:hover .barra-carregamento::after {
+    opacity: 1; /* Brilho aparece ao passar o mouse */
+}
+
+/* ----------------- 5. Perfil e Hub de Links ----------------- */
+.perfil-cabecalho {
+    text-align: center;
+    margin-bottom: var(--espaco-medio);
+}
+
+.foto-perfil {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto var(--espaco-pequeno);
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: var(--sombra-media);
+    border: 4px solid white;
+    position: relative;
+}
+
+.foto-perfil img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transicao-lenta);
+}
+
+.foto-perfil::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(45deg, rgba(34, 84, 61, 0.3), rgba(255, 215, 0, 0.2));
+    opacity: 0.4;
+    transition: var(--transicao-padrao);
+}
+
+.foto-perfil:hover::after {
+    opacity: 0.6;
+}
+
+.nome-artista {
+    font-size: 3.2rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: var(--cor-destaque);
+}
+
+.descricao-artista {
+    font-size: 1.6rem;
+    max-width: 80%;
+    margin: 0 auto var(--espaco-pequeno);
+    color: var(--cor-texto-secundaria);
+    line-height: 1.6;
+}
+
+/* ----------------- 6. Seção de Links ----------------- */
+.secao-links {
+    margin-bottom: var(--espaco-medio);
+    padding: var(--espaco-pequeno);
+}
+
+.grid-links {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.botao-link {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+    background-color: var(--cor-bg-secundaria);
+    border-radius: var(--borda-radius);
+    box-shadow: var(--sombra-suave);
+    color: var(--cor-texto-primaria);
+    position: relative;
+    overflow: hidden;
+    transition: var(--transicao-padrao);
+    text-decoration: none;
+}
+
+.botao-link::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background-color: transparent;
+    transition: var(--transicao-padrao);
+}
+
+.botao-link:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--sombra-media);
+}
+
+.botao-link:hover::before {
+    background-color: var(--cor-destaque);
+}
+
+.icone-link {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+
+.icone-link svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+}
+
+.texto-link {
+    font-family: var(--fonte-titulos);
+    font-weight: 600;
+    font-size: 1.6rem;
+}
+
+/* Estilos específicos para cada tipo de botão de link */
+.instagram::before {
+    background-color: #C13584;
+}
+
+.instagram:hover {
+    color: #C13584;
+}
+
+.instagram .icone-link {
+    color: #C13584;
+}
+
+.youtube::before {
+    background-color: #FF0000;
+}
+
+.youtube:hover {
+    color: #FF0000;
+}
+
+.youtube .icone-link {
+    color: #FF0000;
+}
+
+.tiktok::before {
+    background-color: #FF0050;
+}
+
+.tiktok:hover {
+    color: #FF0050;
+}
+
+.tiktok .icone-link {
+    color: #FF0050;
+}
+
+.spotify::before {
+    background-color: #1DB954;
+}
+
+.spotify:hover {
+    color: #1DB954;
+}
+
+.spotify .icone-link {
+    color: #1DB954;
+}
+
+.whatsapp::before {
+    background-color: #25D366;
+}
+
+.whatsapp:hover {
+    color: #25D366;
+}
+
+.whatsapp .icone-link {
+    color: #25D366;
+}
+
+/* ----------------- 7. Formulário de Contato ----------------- */
+.secao-contato {
+    background-color: var(--cor-bg-secundaria);
+    padding: var(--espaco-medio);
+    border-radius: var(--borda-radius);
+    box-shadow: var(--sombra-suave);
+    margin-bottom: var(--espaco-medio);
+}
+
+.form-contato {
+    max-width: 100%;
+}
+
+.campo-formulario {
+    margin-bottom: 2rem;
+}
+
+.campo-formulario label {
+    display: block;
+    margin-bottom: 0.8rem;
+    font-weight: 500;
+    color: var(--cor-texto-secundaria);
+}
+
+.campo-formulario input,
+.campo-formulario select,
+.campo-formulario textarea {
+    width: 100%;
+    padding: 1.2rem;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--borda-radius);
+    background-color: var(--cor-bg-terciaria);
+    color: var(--cor-texto-primaria);
+    font-family: var(--fonte-texto);
+    font-size: 1.6rem;
+    transition: var(--transicao-padrao);
+    resize: none;
+}
+
+.campo-formulario input:focus,
+.campo-formulario select:focus,
+.campo-formulario textarea:focus {
+    border-color: var(--cor-destaque);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(34, 84, 61, 0.1);
+}
+
+.campo-formulario input::placeholder,
+.campo-formulario select::placeholder,
+.campo-formulario textarea::placeholder {
+    color: var(--cor-texto-terciaria);
+    opacity: 0.8;
+}
+
+/* ----------------- 8. Tooltip Personalizado ----------------- */
+.tooltip-container {
+    position: fixed;
+    z-index: 10000;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, -100%) scale(0.95);
+    transition: opacity 0.2s, transform 0.2s;
+    max-width: 280px;
+}
+
+.tooltip-container.visivel {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -100%) scale(1);
+}
+
+.tooltip-conteudo {
+    background-color: var(--cor-bg-secundaria);
+    color: var(--cor-texto-primaria);
+    padding: 1rem 1.4rem;
+    border-radius: var(--borda-radius);
+    box-shadow: var(--sombra-elevada);
+    border: 1px solid var(--cor-destaque);
+    text-align: center;
+    font-size: 1.4rem;
+    line-height: 1.4;
+}
+
+.tooltip-texto {
+    position: relative;
+}
+
+.tooltip-seta {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: var(--cor-bg-secundaria);
+    border-right: 1px solid var(--cor-destaque);
+    border-bottom: 1px solid var(--cor-destaque);
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+}
+
+/* ----------------- 9. Botão Voltar ao Topo ----------------- */
+.botao-topo {
+    position: fixed;
+    bottom: 3rem;
+    right: 3rem;
+    z-index: 90;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: var(--cor-destaque);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--sombra-suave);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: var(--transicao-padrao);
+}
+
+.botao-topo.visivel {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.botao-topo:hover {
+    background-color: var(--cor-destaque-hover);
+    transform: translateY(-5px);
+    box-shadow: var(--sombra-media);
+}
+
+.botao-topo svg {
+    width: 24px;
+    height: 24px;
+    fill: white;
+}
+
+/* ----------------- 10. Rodapé ----------------- */
+.rodape {
+    background-color: var(--cor-destaque);
+    padding: var(--espaco-pequeno) 0;
+    color: white;
+    text-align: center;
+}
+
+.rodape .container {
+    max-width: var(--largura-maxima);
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.copyright {
+    font-size: 1.4rem;
+}
+
+.copyright p {
+    margin-bottom: 0.5rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.copyright a {
+    color: var(--cor-amarelo-ouro);
+    font-weight: 500;
+    text-decoration: none;
+    transition: var(--transicao-padrao);
+}
+
+.copyright a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+/* ----------------- 11. LGPD Modal ----------------- */
+.lgpd-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: 10001; /* Maior que o preloader */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.lgpd-modal.ativo {
+    opacity: 1;
+    visibility: visible;
+}
+
+.lgpd-modal-conteudo {
+    background-color: var(--cor-bg-secundaria);
+    border-radius: var(--borda-radius);
+    padding: 3rem;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: var(--sombra-elevada);
+    border: 1px solid var(--cor-borda);
+    animation: aparecer 0.5s ease forwards;
+}
+
+.lgpd-modal-conteudo h2 {
+    color: var(--cor-destaque);
+    font-size: 2.4rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.lgpd-texto {
+    margin-bottom: 2.5rem;
+}
+
+.lgpd-texto p {
+    margin-bottom: 1.5rem;
+    font-size: 1.6rem;
+    line-height: 1.6;
+}
+
+.lgpd-texto a {
+    color: var(--cor-destaque);
+    text-decoration: underline;
+}
+
+.lgpd-termos {
+    width: 100%;
+    height: 300px;
+    margin-bottom: 2.5rem;
+    padding: 1rem;
+    border-radius: var(--borda-radius);
+    border: 1px solid var(--cor-borda);
+    background-color: var(--cor-bg-terciaria);
+    color: var(--cor-texto-primaria);
+    font-family: var(--fonte-texto);
+    font-size: 1.4rem;
+    resize: none;
+    overflow-y: auto;
+}
+
+.lgpd-botoes {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.lgpd-mensagem-rejeicao {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--cor-borda);
+    text-align: center;
+    display: none;
+}
+
+.lgpd-mensagem-rejeicao.ativo {
+    display: block;
+    animation: aparecer 0.5s ease forwards;
+}
+
+.lgpd-mensagem-rejeicao p {
+    margin-bottom: 1.5rem;
+    color: var(--cor-texto-secundaria);
+}
+
+/* ----------------- 12. Cursor Personalizado ----------------- */
+body.cursor-ativo {
+    cursor: none !important;
+}
+
+.cursor-principal {
+    width: 24px;
+    height: 24px;
+    position: fixed;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-5px, -3px);
+    transition: transform 0.15s ease, opacity 0.3s ease;
+}
+
+.cursor-principal svg {
+    width: 100%;
+    height: 100%;
+    fill: var(--cor-destaque);
+    stroke: white;
+    stroke-width: 1px;
+    transition: all 0.3s ease;
+}
+
+/* Estados do cursor */
+.cursor-principal.hover svg {
+    transform: scale(1.2);
+    fill: var(--cor-destaque-hover);
+}
+
+.cursor-principal.loading {
+    animation: rotacionarCursor 0.8s linear infinite;
+}
+
+.cursor-principal.texto svg {
+    opacity: 0.5;
+    transform: scale(0.8);
+}
+
+/* Oculta o cursor personalizado sobre elementos clicáveis */
+.cursor-principal.sobre-clicavel {
+    opacity: 0;
+}
+
+/* Restaura o cursor do sistema em elementos clicáveis */
+a, button, .botao-primario, [role="button"] {
+    cursor: pointer !important;
+}
+
+/* Restaura o cursor de texto em campos de texto */
+input, textarea {
+    cursor: text !important;
+}
+
+/* Garantir que labels usem o cursor personalizado */
+label {
+    cursor: none !important;
+}
+
+@keyframes rotacionarCursor {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Desativa em dispositivos touch */
+@media (pointer: coarse) {
+    .cursor-principal {
+        display: none;
+    }
+    
+    body {
+        cursor: auto;
+    }
+}
+
+/* ----------------- 13. Animações Gerais ----------------- */
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes aparecer-lateral {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.animacao-aparecer {
+    animation: aparecer 0.8s ease forwards;
+}
+
+/* Animação de borda piscante para o formulário */
+@keyframes bordaPiscante {
+    0% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.7); }
+    50% { box-shadow: 0 0 0 8px rgba(192, 57, 43, 0.3); }
+    100% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.7); }
+  }
+  
+  /* Classe para destacar o formulário */
+  .destacar-formulario {
+    animation: bordaPiscante 0.8s ease-in-out;
+    animation-iteration-count: 5;
+    border: 2px solid var(--cor-vermelho) !important;
+    transition: border 0.3s ease;
+  }  
+
+/* ----------------- 14. Responsividade ----------------- */
+@media (max-width: 768px) {
+    :root {
+        --espaco-padrao: 60px;
+        --espaco-medio: 30px;
+        --espaco-pequeno: 15px;
+    }
+    
+    html {
+        font-size: 58%;
+    }
+    
+    .nome-artista {
+        font-size: 2.8rem;
+    }
+    
+    .descricao-artista {
+        font-size: 1.5rem;
+        max-width: 95%;
+    }
+    
+    .botao-link {
+        padding: 1.2rem;
+    }
+    
+    .secao-contato {
+        padding: var(--espaco-pequeno);
+    }
+    
+    .lgpd-modal-conteudo {
+        padding: 2rem;
+    }
+    
+    .lgpd-botoes {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .botao-topo {
+        width: 40px;
+        height: 40px;
+        right: 2rem;
+        bottom: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .lgpd-termos {
+        height: 200px;
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --espaco-padrao: 40px;
+        --espaco-medio: 25px;
+        --espaco-pequeno: 12px;
+    }
+    
+    html {
+        font-size: 55%;
+    }
+    
+    .foto-perfil {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .nome-artista {
+        font-size: 2.4rem;
+    }
+    
+    .descricao-artista {
+        font-size: 1.4rem;
+    }
+    
+    .botao-link {
+        padding: 1rem;
+    }
+    
+    .icone-link {
+        width: 24px;
+        height: 24px;
+        margin-right: 12px;
+    }
+    
+    .texto-link {
+        font-size: 1.4rem;
+    }
+    
+    .campo-formulario input,
+    .campo-formulario select,
+    .campo-formulario textarea {
+        padding: 1rem;
+    }
+    
+    .copyright {
+        font-size: 1.2rem;
+    }
+}
