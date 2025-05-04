@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     GerenciadorTooltips.inicializar();
     inicializarFormulario();
     inicializarAnimacoesScroll();
+    ContadorCliques.inicializar();
 });
 
 /**
@@ -594,6 +595,92 @@ const inicializarNavegacao = () => {
     };
 };
 
+/**
+ * Gerenciador de contagem de cliques em links principais
+ */
+const ContadorCliques = (function() {
+    console.log('Módulo ContadorCliques sendo inicializado');
+    const URL_API = 'https://evertonsilvaoficial.com.br/api/registrar-clique.php';
+    console.log('URL da API configurada:', URL_API);
+    
+    /**
+     * Registra clique em um link
+     * @param {string} nomeLink - Nome do link clicado (instagram, tiktok, youtube, whatsapp)
+     */
+    function registrarClique(nomeLink) {
+        console.log('Clique detectado no link:', nomeLink);
+        
+        const dados = JSON.stringify({ link: nomeLink });
+        console.log('Dados sendo enviados:', dados);
+        
+        // Usa apenas fetch para poder receber resposta detalhada da API
+        console.log('Usando fetch para enviar dados');
+        fetch(URL_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: dados,
+            keepalive: true // Mantém a conexão viva mesmo se a página for fechada
+        })
+        .then(resposta => {
+            console.log('Resposta da API recebida, status:', resposta.status);
+            return resposta.text();
+        })
+        .then(texto => {
+            console.log('Resposta completa:', texto);
+        })
+        .catch(erro => {
+            console.error('Erro ao registrar clique:', erro);
+        });
+        
+        // Verificação adicional usando fetch para depuração
+        if (window.debugTracking) {
+            setTimeout(() => {
+                fetch(URL_API + '?debug=1', { method: 'GET' })
+                    .then(r => r.text())
+                    .then(r => console.log('Verificação debug:', r))
+                    .catch(e => console.error('Erro na verificação:', e));
+            }, 1000);
+        }
+    }
+    
+    /**
+     * Inicializa os listeners de clique nos links
+     */
+    function inicializar() {
+        console.log('Iniciando configuração dos listeners de cliques');
+        
+        // Mapeamento de seletores para nomes de links
+        const mapeamentoLinks = {
+            '.instagram': 'instagram',
+            '.tiktok': 'tiktok',
+            '.youtube': 'youtube',
+            '.whatsapp': 'whatsapp'
+        };
+        
+        // Adiciona event listeners em todos os links mapeados
+        Object.entries(mapeamentoLinks).forEach(([seletor, nomeLink]) => {
+            const elementos = document.querySelectorAll(seletor);
+            console.log(`Encontrados ${elementos.length} elementos para o seletor "${seletor}"`);
+            
+            elementos.forEach((elemento, index) => {
+                console.log(`Configurando listener para ${seletor} #${index+1}`);
+                
+                elemento.addEventListener('click', function(e) {
+                    console.log(`Clique capturado em ${nomeLink}`);
+                    registrarClique(nomeLink);
+                });
+            });
+        });
+        
+        // Ativar modo debug temporariamente
+        window.debugTracking = true;
+        
+        console.log('Contador de cliques em links inicializado com sucesso');
+    }
+    
+    // Interface pública
+    return { inicializar };
+})();
 
 /**
  * Gerencia o cursor personalizado

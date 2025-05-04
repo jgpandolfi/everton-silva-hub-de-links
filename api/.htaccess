@@ -59,6 +59,14 @@ php_value error_log "../api_errors.log"
     Header always set Access-Control-Allow-Origin "https://evertonsilvaoficial.com.br" env=IS_CORS
 </Files>
 
+# ----------------- PERMITIR REGISTRO DE CLIQUES -----------------
+# Garantir acesso ao endpoint de processamento de cliques
+<Files "registrar-clique.php">
+    Require all granted
+    SetEnvIf Origin "https://evertonsilvaoficial\.com\.br" IS_CORS=1
+    Header always set Access-Control-Allow-Origin "https://evertonsilvaoficial.com.br" env=IS_CORS
+</Files>
+
 # ----------------- LIMITAR MÉTODOS HTTP -----------------
 # Permitir apenas POST e OPTIONS para endpoints da API
 <LimitExcept POST OPTIONS GET>
