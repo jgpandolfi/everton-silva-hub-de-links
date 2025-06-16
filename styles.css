@@ -491,6 +491,41 @@ section {
     opacity: 0.8;
 }
 
+.mensagem-formulario {
+    margin-bottom: 1.5rem;
+    padding: 1.2rem 1.6rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: background 0.3s, color 0.3s;
+    border-left: 6px solid transparent;
+    outline: none;
+}
+
+.mensagem-formulario.erro {
+    background: #c51244;
+    color: #fff;
+    border-left-color: #a00;
+}
+
+.mensagem-formulario.sucesso {
+    background: #38b000;
+    color: #fff;
+    border-left-color: #267300;
+}
+
+.mensagem-formulario:focus {
+    outline: 2px solid #222;
+}
+
+.mensagem-formulario.desaparecer {
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
 /* ========== 11. Tooltip Personalizado ========== */
 
 .tooltip-container {
