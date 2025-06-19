@@ -313,7 +313,7 @@ section {
     border-radius: 0 2px 2px 0;
 }
 
-/* ========== 8. Perfil e Hub de Links ========== */
+/* ========== 8. Perfil ========== */
 
 .perfil-cabecalho {
     text-align: center;
@@ -357,12 +357,218 @@ section {
 .descricao-artista {
     font-size: 1.6rem;
     max-width: 80%;
-    margin: 0 auto var(--espaco-pequeno);
+    margin: 0 auto;
     color: var(--cor-branco-rosado);
     line-height: 1.6;
 }
 
-/* ========== 9. Seção de Links ========== */
+/* ========== 9. Carrossel de Eventos ========== */
+
+.secao-eventos {
+    margin-bottom: var(--espaco-pequeno);
+    padding: 0;
+}
+
+.titulo-secao-fundo-escuro {
+    margin-top: 0;
+    color: var(--cor-rosa-claro);
+}
+
+.titulo-secao-fundo-escuro::after{
+    background-color: var(--cor-rosa-claro);
+}
+
+.carrossel-eventos {
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+    background: var(--cor-bg-secundaria);
+    border-radius: var(--borda-radius);
+    box-shadow: var(--sombra-suave);
+    overflow: hidden;
+}
+
+.carrossel-container {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.carrossel-track {
+    display: flex;
+    transition: transform 0.5s ease;
+    will-change: transform;
+}
+
+.evento-card {
+    flex: 0 0 100%;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: var(--cor-bg-secundaria);
+    border-radius: var(--borda-radius);
+    transition: var(--transicao-padrao);
+    position: relative;
+    min-height: 100px;
+}
+
+.evento-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--gradiente-botao);
+    border-radius: 0 4px 4px 0;
+}
+
+.evento-imagem {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--sombra-suave);
+    background: var(--cor-bg-cartao);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.evento-imagem img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.evento-imagem-placeholder {
+    width: 100%;
+    height: 100%;
+    background: var(--gradiente-botao);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.evento-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.evento-nome {
+    font-family: var(--fonte-titulos);
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: var(--cor-destaque);
+    margin-top: 0;
+    margin-bottom: 0.3rem;
+    line-height: 1.2;
+}
+
+.evento-detalhes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    font-size: 1.3rem;
+    color: var(--cor-texto-secundaria);
+}
+
+.evento-detalhe {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.evento-detalhe-icone {
+    width: 14px;
+    height: 14px;
+    fill: var(--cor-destaque);
+    flex-shrink: 0;
+}
+
+.evento-detalhe-texto {
+    font-weight: 500;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.carrossel-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background: var(--cor-branco-rosado);
+    border-top: 1px solid var(--cor-borda);
+}
+
+.carrossel-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--cor-bg-secundaria);
+    border: 2px solid var(--cor-destaque);
+    color: var(--cor-destaque);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transicao-padrao);
+    cursor: pointer;
+}
+
+.carrossel-btn:hover,
+.carrossel-btn:focus {
+    background: var(--cor-destaque);
+    color: #fff;
+    transform: scale(1.1);
+    box-shadow: var(--sombra-suave);
+}
+
+.carrossel-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.carrossel-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+.carrossel-dots {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.carrossel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--cor-borda);
+    border: none;
+    cursor: pointer;
+    transition: var(--transicao-padrao);
+}
+
+.carrossel-dot.ativo {
+    background: var(--cor-destaque);
+    transform: scale(1.2);
+}
+
+.carrossel-dot:hover {
+    background: var(--cor-destaque-hover);
+}
+
+/* ========== 10. Seção de Links ========== */
 
 .secao-links { margin-bottom: var(--espaco-medio); padding: var(--espaco-pequeno); }
 
@@ -442,7 +648,7 @@ section {
 
 .whatsapp .icone-link { color: #25D366; }
 
-/* ========== 10. Formulário de Contato ========== */
+/* ========== 11. Formulário de Contato ========== */
 
 .secao-contato {
     background: var(--cor-bg-secundaria);
@@ -527,7 +733,7 @@ section {
     transition: opacity 0.5s;
 }
 
-/* ========== 11. Tooltip Personalizado ========== */
+/* ========== 12. Tooltip Personalizado ========== */
 
 .tooltip-container {
     position: fixed;
@@ -568,7 +774,7 @@ section {
     transform: translateX(-50%) rotate(45deg);
 }
 
-/* ========== 12. Botão Voltar ao Topo ========== */
+/* ========== 13. Botão Voltar ao Topo ========== */
 
 .botao-topo {
     position: fixed;
@@ -599,7 +805,7 @@ section {
 
 .botao-topo svg { width: 24px; height: 24px; fill: #fff; }
 
-/* ========== 13. Rodapé ========== */
+/* ========== 14. Rodapé ========== */
 
 .rodape {
     background: var(--cor-roxo-medio);
@@ -631,7 +837,7 @@ section {
     text-decoration: underline;
 }
 
-/* ========== 14. LGPD Modal ========== */
+/* ========== 15. LGPD Modal ========== */
 .lgpd-modal {
     position: fixed;
     inset: 0;
@@ -713,7 +919,7 @@ section {
 
 .lgpd-mensagem-rejeicao p { margin-bottom: 1.5rem; color: var(--cor-texto-secundaria); }
 
-/* ========== 15. Cursor Personalizado ========== */
+/* ========== 16. Cursor Personalizado ========== */
 
 body.cursor-ativo { cursor: none !important; }
 
@@ -763,7 +969,7 @@ button svg, .botao-primario svg, .botao-link svg, [role="button"] svg {
     body { cursor: auto; }
 }
 
-/* ========== 16. Animações Gerais ========== */
+/* ========== 17. Animações Gerais ========== */
 
 @keyframes aparecer {
     from { opacity: 0; transform: translateY(30px);}
@@ -785,7 +991,7 @@ button svg, .botao-primario svg, .botao-link svg, [role="button"] svg {
     transition: border 0.3s;
 }
 
-/* ========== 17. Responsividade ========== */
+/* ========== 18. Responsividade ========== */
 
 @media (max-width: 768px) {
     :root {
@@ -805,6 +1011,13 @@ button svg, .botao-primario svg, .botao-link svg, [role="button"] svg {
 
 @media (max-width: 576px) {
     .lgpd-termos { height: 200px; font-size: 1.3rem; }
+    .evento-card { padding: 1.2rem; gap: 1.2rem; min-height: 90px; }
+    .evento-imagem { width: 80px; height: 80px; }
+    .evento-nome { font-size: 1.5rem; }
+    .evento-detalhes { gap: 0.5rem; font-size: 1.2rem; }
+    .carrossel-controls { padding: 0.8rem 1.2rem; }
+    .carrossel-btn { width: 28px; height: 28px; }
+    .carrossel-btn svg { width: 16px; height: 16px; }
 }
 
 @media (max-width: 480px) {

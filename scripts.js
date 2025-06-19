@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarConsentimentoLGPD();
     inicializarNavegacao();
     inicializarCursorPersonalizado();
+    CarrosselEventos.inicializar();
     inicializarBotaoTopo();
     GerenciadorTooltips.inicializar();
     inicializarFormulario();
@@ -145,7 +146,310 @@ function inicializarPreloader() {
     });
 }
 
-// ==================== 3. Rastreador de Visitantes ====================
+// ==================== 3. Carrossel de Eventos ====================
+
+const CarrosselEventos = (() => {
+    let eventos = [];
+    let eventoAtual = 0;
+    let eventosPorPagina = 1;
+    let totalPaginas = 0;
+    
+    const elementos = {
+        secao: null,
+        track: null,
+        btnPrev: null,
+        btnNext: null,
+        dots: null
+    };
+
+    function obterEventosPorPagina() {
+        const largura = window.innerWidth;
+        if (largura >= 1200) return 4;
+        if (largura >= 1024) return 3;
+        if (largura >= 768) return 2;
+        return 1;
+    }
+
+    function formatarData(dataStr) {
+        const data = new Date(dataStr + 'T00:00:00');
+        return data.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    }
+
+    function formatarHorario(horarioStr) {
+        return horarioStr.replace(':', 'h');
+    }
+
+    function criarIconeSVG(tipo) {
+        const icones = {
+            calendario: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.1 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg>',
+            relogio: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="m12.5 7-1 1v5.25l4.5 2.67.75-1.23L13 12.25z"/></svg>',
+            localizacao: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>',
+            cidade: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"/></svg>'
+        };
+        return icones[tipo] || '';
+    }
+
+    function criarCardEvento(evento) {
+        const dataFormatada = formatarData(evento.data);
+        const horarioFormatado = formatarHorario(evento.horario);
+        
+        return `
+            <div class="evento-card" data-evento-id="${evento.id}">
+                <div class="evento-imagem">
+                    ${evento.imagem ? 
+                        `<img src="assets/img/eventos/${evento.imagem}" alt="${evento.nome}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=evento-imagem-placeholder>🎵</div>'">` :
+                        `<div class="evento-imagem-placeholder">🎵</div>`
+                    }
+                </div>
+                <div class="evento-info">
+                    <h3 class="evento-nome">${evento.nome}</h3>
+                    <div class="evento-detalhes">
+                        <div class="evento-detalhe">
+                            <span class="evento-detalhe-icone">${criarIconeSVG('calendario')}</span>
+                            <span class="evento-detalhe-texto">${dataFormatada}</span>
+                        </div>
+                        <div class="evento-detalhe">
+                            <span class="evento-detalhe-icone">${criarIconeSVG('relogio')}</span>
+                            <span class="evento-detalhe-texto">${horarioFormatado}</span>
+                        </div>
+                        <div class="evento-detalhe">
+                            <span class="evento-detalhe-icone">${criarIconeSVG('localizacao')}</span>
+                            <span class="evento-detalhe-texto">${evento.endereco}</span>
+                        </div>
+                        <div class="evento-detalhe">
+                            <span class="evento-detalhe-icone">${criarIconeSVG('cidade')}</span>
+                            <span class="evento-detalhe-texto">${evento.cidade}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderizarEventos() {
+        if (!elementos.track) return;
+        
+        elementos.track.innerHTML = eventos.map(evento => criarCardEvento(evento)).join('');
+        atualizarControles();
+        atualizarPosicao();
+    }
+
+    function criarDots() {
+        if (!elementos.dots) return;
+        
+        elementos.dots.innerHTML = '';
+        for (let i = 0; i < totalPaginas; i++) {
+            const dot = document.createElement('button');
+            dot.className = `carousel-dot ${i === eventoAtual ? 'ativo' : ''}`;
+            dot.setAttribute('aria-label', `Ir para página ${i + 1}`);
+            dot.addEventListener('click', () => irParaPagina(i));
+            elementos.dots.appendChild(dot);
+        }
+    }
+
+    function atualizarControles() {
+        eventosPorPagina = obterEventosPorPagina();
+        totalPaginas = Math.ceil(eventos.length / eventosPorPagina);
+        
+        if (elementos.btnPrev) {
+            elementos.btnPrev.disabled = eventoAtual === 0;
+        }
+        if (elementos.btnNext) {
+            elementos.btnNext.disabled = eventoAtual >= totalPaginas - 1;
+        }
+        
+        criarDots();
+        atualizarDots();
+    }
+
+    function atualizarDots() {
+        if (!elementos.dots) return;
+        
+        const dots = elementos.dots.querySelectorAll('.carousel-dot');
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('ativo', index === eventoAtual);
+        });
+    }
+
+    function atualizarPosicao() {
+        if (!elementos.track) return;
+        
+        const deslocamento = -(eventoAtual * 100);
+        elementos.track.style.transform = `translateX(${deslocamento}%)`;
+    }
+
+    function irParaProximo() {
+        if (eventoAtual < totalPaginas - 1) {
+            eventoAtual++;
+            atualizarPosicao();
+            atualizarControles();
+        }
+    }
+
+    function irParaAnterior() {
+        if (eventoAtual > 0) {
+            eventoAtual--;
+            atualizarPosicao();
+            atualizarControles();
+        }
+    }
+
+    function irParaPagina(pagina) {
+        if (pagina >= 0 && pagina < totalPaginas) {
+            eventoAtual = pagina;
+            atualizarPosicao();
+            atualizarControles();
+        }
+    }
+
+    function ordenarEventosPorData(eventosArray) {
+        return eventosArray.sort((a, b) => {
+            const dataA = new Date(a.data + 'T00:00:00');
+            const dataB = new Date(b.data + 'T00:00:00');
+            return dataA - dataB;
+        });
+    }
+
+    function filtrarEventosFuturos(eventosArray) {
+        const hoje = new Date();
+        hoje.setHours(0, 0, 0, 0);
+        
+        return eventosArray.filter(evento => {
+            const dataEvento = new Date(evento.data + 'T00:00:00');
+            return dataEvento >= hoje;
+        });
+    }
+
+    async function carregarEventos() {
+        try {
+            const response = await fetch('eventos.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            // Filtrar eventos futuros e ordenar por data
+            const eventosFuturos = filtrarEventosFuturos(data.eventos || []);
+            eventos = ordenarEventosPorData(eventosFuturos);
+            
+            const secaoEventos = document.getElementById('secao-eventos');
+            
+            if (eventos.length > 0) {
+                secaoEventos.style.display = 'block';
+                renderizarEventos();
+                
+                // Adicionar classe de animação
+                setTimeout(() => {
+                    secaoEventos.classList.add('animacao-aparecer');
+                }, 100);
+                
+                Utils.log('Carrossel de eventos carregado:', eventos.length, 'eventos');
+            } else {
+                secaoEventos.style.display = 'none';
+                Utils.log('Nenhum evento futuro encontrado');
+            }
+        } catch (erro) {
+            Utils.error('Erro ao carregar eventos:', erro);
+            const secaoEventos = document.getElementById('secao-eventos');
+            if (secaoEventos) {
+                secaoEventos.style.display = 'none';
+            }
+        }
+    }
+
+    function configurarEventListeners() {
+        if (elementos.btnNext) {
+            elementos.btnNext.addEventListener('click', irParaProximo);
+        }
+        if (elementos.btnPrev) {
+            elementos.btnPrev.addEventListener('click', irParaAnterior);
+        }
+        
+        // Suporte a gestos de toque
+        let startX = 0;
+        let endX = 0;
+        
+        if (elementos.track) {
+            elementos.track.addEventListener('touchstart', e => {
+                startX = e.touches[0].clientX;
+            }, { passive: true });
+            
+            elementos.track.addEventListener('touchend', e => {
+                endX = e.changedTouches[0].clientX;
+                const deltaX = startX - endX;
+                
+                if (Math.abs(deltaX) > 50) { // Mínimo de 50px para ativar
+                    if (deltaX > 0) {
+                        irParaProximo();
+                    } else {
+                        irParaAnterior();
+                    }
+                }
+            }, { passive: true });
+        }
+        
+        // Atualizar na mudança de tamanho da tela
+        window.addEventListener('resize', () => {
+            atualizarControles();
+            atualizarPosicao();
+        });
+    }
+
+    function inicializar() {
+        elementos.secao = document.getElementById('secao-eventos');
+        elementos.track = document.getElementById('carrosselTrack');
+        elementos.btnPrev = document.getElementById('btnPrev');
+        elementos.btnNext = document.getElementById('btnNext');
+        elementos.dots = document.getElementById('carouselDots');
+        
+        if (!elementos.secao || !elementos.track) {
+            Utils.log('Elementos do carrossel não encontrados');
+            return;
+        }
+        
+        configurarEventListeners();
+        carregarEventos();
+    }
+
+    return {
+        inicializar,
+        recarregarEventos: carregarEventos
+    };
+})();
+
+function atualizarSchemaEventos(eventos) {
+    const schema = {
+        "@context": "https://schema.org",
+        "@type": "MusicGroup",
+        "name": "Everton Silva",
+        "event": eventos.map(evento => ({
+            "@type": "Event",
+            "name": evento.nome,
+            "startDate": evento.data,
+            "location": {
+                "@type": "Place",
+                "name": evento.endereco,
+                "address": evento.cidade
+            },
+            "performer": {
+                "@type": "MusicGroup",
+                "name": "Everton Silva"
+            }
+        }))
+    };
+    
+    const schemaScript = document.getElementById('eventos-schema');
+    if (schemaScript) {
+        schemaScript.textContent = JSON.stringify(schema);
+    }
+}
+
+// ==================== 4. Rastreador de Visitantes ====================
 
 const RastreadorVisitantes = (() => {
     const INTERVALO_ENVIO = 30000;
@@ -227,7 +531,7 @@ const RastreadorVisitantes = (() => {
     return { iniciar };
 })();
 
-// ==================== 4. Tracking Externo (Clarity/PostHog) ====================
+// ==================== 5. Tracking Externo (Clarity/PostHog) ====================
 
 const GerenciadorTracking = (() => {
     const CLARITY_PROJECT_ID = 'rbgw4bm105';
@@ -288,7 +592,7 @@ const GerenciadorTracking = (() => {
     };
 })();
 
-// ==================== 5. Consentimento LGPD ====================
+// ==================== 6. Consentimento LGPD ====================
 
 function inicializarConsentimentoLGPD() {
     const modal = document.getElementById('lgpd-modal');
@@ -379,7 +683,7 @@ function inicializarConsentimentoLGPD() {
     }
 }
 
-// ==================== 6. Navegação (delegação de eventos) ====================
+// ==================== 7. Navegação (delegação de eventos) ====================
 
 function inicializarNavegacao() {
     document.body.addEventListener('click', function(e) {
@@ -407,7 +711,7 @@ function inicializarNavegacao() {
     }
 }
 
-// ==================== 7. Contador de Cliques (delegação de eventos) ====================
+// ==================== 8. Contador de Cliques (delegação de eventos) ====================
 
 const ContadorCliques = (() => {
     const URL_API = 'https://evertonsilvaoficial.com.br/api/registrar-clique.php';
@@ -441,7 +745,7 @@ const ContadorCliques = (() => {
     return { inicializar };
 })();
 
-// ==================== 8. Cursor Personalizado ====================
+// ==================== 9. Cursor Personalizado ====================
 
 const SELETORES_CLICAVEIS = [
   'a',
@@ -487,7 +791,7 @@ function inicializarCursorPersonalizado() {
     }, true);
 }
 
-// ==================== 9. Botão Voltar ao Topo ====================
+// ==================== 10. Botão Voltar ao Topo ====================
 
 function inicializarBotaoTopo() {
     const botaoTopo = document.getElementById('botaoTopo');
@@ -503,7 +807,7 @@ function inicializarBotaoTopo() {
     });
 }
 
-// ==================== 10. Animações com Scroll ====================
+// ==================== 11. Animações com Scroll ====================
 
 function inicializarAnimacoesScroll() {
     const elementosAnimados = document.querySelectorAll(
@@ -523,7 +827,7 @@ function inicializarAnimacoesScroll() {
     window.addEventListener('scroll', verificarVisibilidade);
 }
 
-// ==================== 11. Tooltips Personalizados ====================
+// ==================== 12. Tooltips Personalizados ====================
 
 const GerenciadorTooltips = (() => {
     let tooltipContainer, tooltipTexto, elementoAtual = null, mobileTimerId = null, tooltipVisivel = false;
@@ -598,7 +902,7 @@ const GerenciadorTooltips = (() => {
     return { inicializar };
 })();
 
-// ==================== 12. Formulário de Contato ====================
+// ==================== 13. Formulário de Contato ====================
 
 function inicializarFormulario() {
     const formulario = document.getElementById('formularioContato');

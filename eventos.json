@@ -1,0 +1,13 @@
+{
+  "eventos": [
+    {
+      "id": 1,
+      "nome": "Samba de Todos",
+      "data": "2025-06-22",
+      "horario": "17:00",
+      "endereco": "Club 795 (Princesa Isabel, 795)",
+      "cidade": "Porto Alegre - RS",
+      "imagem": "samba-de-todos.webp"
+    }
+  ]
+}
