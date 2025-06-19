@@ -443,6 +443,22 @@ const ContadorCliques = (() => {
 
 // ==================== 8. Cursor Personalizado ====================
 
+const SELETORES_CLICAVEIS = [
+  'a',
+  'button', 
+  '.botao-link',
+  '.botao-primario',
+  '.icone-link',
+  '.texto-link',
+  'select',
+  '[role="button"]'
+].join(', ');
+
+const SELETORES_TEXTO = [
+  'input',
+  'textarea'
+].join(', ');
+
 function inicializarCursorPersonalizado() {
     if ('ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0) {
         document.body.classList.add('dispositivo-touch');
@@ -457,10 +473,10 @@ function inicializarCursorPersonalizado() {
     });
     document.body.addEventListener('mouseover', e => {
         const el = e.target;
-        if (el.matches('a, button, .botao-link, .botao-primario, [role="button"]')) {
+        if (el.matches(SELETORES_CLICAVEIS)) {
             cursorPrincipal.classList.add('sobre-clicavel', 'hover');
             document.body.classList.remove('cursor-ativo');
-        } else if (el.matches('input, textarea, select')) {
+        } else if (el.matches(SELETORES_TEXTO)) {
             cursorPrincipal.classList.add('sobre-clicavel', 'texto');
             document.body.classList.remove('cursor-ativo');
         }

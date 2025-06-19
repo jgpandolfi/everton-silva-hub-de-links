@@ -193,6 +193,7 @@ section {
 }
 
 .titulo-secao {
+    width: 100%;
     text-align: center;
     margin-bottom: 2rem;
     display: inline-block;
@@ -742,11 +743,15 @@ body.cursor-ativo { cursor: none !important; }
 
 .cursor-principal.sobre-clicavel { opacity: 0; }
 
-a, button, .botao-primario, [role="button"] { cursor: pointer !important; }
+a, button, .botao-primario, select, [role="button"] { cursor: pointer !important; }
 
 input, textarea { cursor: text !important; }
 
 label { cursor: none !important; }
+
+button svg, .botao-primario svg, .botao-link svg, [role="button"] svg {
+    pointer-events: none;
+}
 
 @keyframes rotacionarCursor {
     from { transform: translate(-50%, -50%) rotate(0deg); }
