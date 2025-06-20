@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Dashboard Everton Silva</title>
+    
+    <!-- Meta tags para SEO -->
+    <meta name="description" content="Área restrita - Dashboard administrativo do site oficial de Everton Silva">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Preconnect e preload -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Roboto:wght@300;400;500&display=swap" as="style">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Roboto:wght@300;400;500&display=swap">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="../assets/img/favicon.ico">
+</head>
+<body class="body-login">
+    <div class="container-login">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="../assets/img/logo-everton-silva.webp" alt="Logo Everton Silva" class="login-logo">
+                <h1 class="login-titulo">Dashboard Administrativo</h1>
+                <p class="login-subtitulo">Área restrita para administração</p>
+            </div>
+            
+            <form id="formLogin" class="login-form">
+                <div class="campo-grupo">
+                    <label for="login" class="campo-label">Usuário:</label>
+                    <input type="text" id="login" name="login" class="campo-input" required autocomplete="username">
+                </div>
+                
+                <div class="campo-grupo">
+                    <label for="senha" class="campo-label">Senha:</label>
+                    <input type="password" id="senha" name="senha" class="campo-input" required autocomplete="current-password">
+                </div>
+                
+                <button type="submit" class="botao-login" id="btnLogin">
+                    <span class="botao-texto">Entrar</span>
+                    <span class="botao-carregando" style="display: none;">Entrando...</span>
+                </button>
+            </form>
+            
+            <div id="mensagemErro" class="mensagem-erro" style="display: none;" role="alert"></div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('formLogin').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btnLogin = document.getElementById('btnLogin');
+            const botaoTexto = btnLogin.querySelector('.botao-texto');
+            const botaoCarregando = btnLogin.querySelector('.botao-carregando');
+            const mensagemErro = document.getElementById('mensagemErro');
+            
+            // Estado de carregamento
+            btnLogin.disabled = true;
+            botaoTexto.style.display = 'none';
+            botaoCarregando.style.display = 'inline';
+            mensagemErro.style.display = 'none';
+            
+            try {
+                const formData = new FormData(e.target);
+                const dados = {
+                    login: formData.get('login'),
+                    senha: formData.get('senha')
+                };
+                
+                const response = await fetch('../api/auth/login.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(dados)
+                });
+                
+                const resultado = await response.json();
+                
+                if (resultado.sucesso) {
+                    window.location.href = 'index.html';
+                } else {
+                    mensagemErro.textContent = resultado.erro || 'Erro ao fazer login';
+                    mensagemErro.style.display = 'block';
+                }
+            } catch (error) {
+                mensagemErro.textContent = 'Erro de conexão. Tente novamente.';
+                mensagemErro.style.display = 'block';
+            } finally {
+                // Restaurar estado do botão
+                btnLogin.disabled = false;
+                botaoTexto.style.display = 'inline';
+                botaoCarregando.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

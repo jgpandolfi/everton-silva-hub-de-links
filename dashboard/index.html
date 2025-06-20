@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Everton Silva</title>
+    
+    <!-- Meta tags para SEO -->
+    <meta name="description" content="Dashboard administrativo com métricas e análises do site oficial de Everton Silva">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Preconnect e preload -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Roboto:wght@300;400;500&display=swap" as="style">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Roboto:wght@300;400;500&display=swap">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="../assets/img/favicon.ico">
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="container">
+            <div class="header-conteudo">
+                <div class="header-logo">
+                    <img src="../assets/img/logo-everton-silva.webp" alt="Logo Everton Silva" class="logo-img">
+                    <div class="logo-texto">
+                        <h1 class="logo-titulo">Dashboard</h1>
+                        <p class="logo-subtitulo">Everton Silva</p>
+                    </div>
+                </div>
+                
+                <div class="header-usuario">
+                    <span class="usuario-nome" id="usuarioNome">Carregando...</span>
+                    <button class="botao-logout" id="btnLogout">Sair</button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <div class="container">
+            <!-- Filtros -->
+            <section class="filtros-secao">
+                <div class="filtros-container">
+                    <h2 class="filtros-titulo">Filtros de Período</h2>
+                    <div class="filtros-grid">
+                        <div class="campo-grupo">
+                            <label for="dataInicio">Data Início:</label>
+                            <input type="date" id="dataInicio" class="campo-input">
+                        </div>
+                        <div class="campo-grupo">
+                            <label for="dataFim">Data Fim:</label>
+                            <input type="date" id="dataFim" class="campo-input">
+                        </div>
+                        <div class="campo-grupo">
+                            <button id="btnFiltrar" class="botao-filtrar">Aplicar Filtros</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Cards de Estatísticas -->
+            <section class="estatisticas-secao">
+                <h2 class="secao-titulo">Visão Geral</h2>
+                <div class="cards-grid">
+                    <div class="card-estatistica">
+                        <div class="card-icone visitantes">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4zM6 12c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h7v-2c0-.92.78-2.34 2.42-3.09C7.81 13.75 6.87 14 6 14zM18 12c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm0 2c-1.87 0-2.81-.25-3.42-.09C16.22 14.66 17 16.08 17 17v2h7v-1.5c0-2.33-4.67-3.5-7-3.5z"/>
+                            </svg>
+                        </div>
+                        <div class="card-conteudo">
+                            <h3 class="card-numero" id="totalVisitantes">0</h3>
+                            <p class="card-label">Total de Visitantes</p>
+                            <span class="card-extra" id="visitantesUnicos">0 únicos</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-estatistica">
+                        <div class="card-icone leads">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/>
+                            </svg>
+                        </div>
+                        <div class="card-conteudo">
+                            <h3 class="card-numero" id="totalLeads">0</h3>
+                            <p class="card-label">Leads Gerados</p>
+                            <span class="card-extra" id="emailsUnicos">0 e-mails únicos</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-estatistica">
+                        <div class="card-icone cliques">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M7 14c-1.66 0-3 1.34-3 3 0 1.31-1.16 2-2 2 .92 1.22 2.49 2 4 2 2.21 0 4-1.79 4-4 0-1.66-1.34-3-3-3zm13.71-9.37l-1.34-1.34c-.39-.39-1.02-.39-1.41 0L9 12.25 11.75 15l8.96-8.96c.39-.39.39-1.02 0-1.41z"/>
+                            </svg>
+                        </div>
+                        <div class="card-conteudo">
+                            <h3 class="card-numero" id="totalCliques">0</h3>
+                            <p class="card-label">Total de Cliques</p>
+                            <span class="card-extra" id="cliquesMedio">0 por visitante</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-estatistica">
+                        <div class="card-icone tempo">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
+                                <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                            </svg>
+                        </div>
+                        <div class="card-conteudo">
+                            <h3 class="card-numero" id="tempoMedio">0s</h3>
+                            <p class="card-label">Tempo Médio</p>
+                            <span class="card-extra">Duração da sessão</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Gráficos -->
+            <section class="graficos-secao">
+                <div class="graficos-grid">
+                    <div class="grafico-card">
+                        <h3 class="grafico-titulo">Visitantes por Dia (Últimos 30 dias)</h3>
+                        <div class="grafico-canvas-container">
+                            <canvas id="graficoVisitantes"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="grafico-card">
+                        <h3 class="grafico-titulo">Cliques por Rede Social</h3>
+                        <div class="grafico-canvas-container">
+                            <canvas id="graficoCliques"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Tabelas -->
+            <section class="tabelas-secao">
+                <div class="tabela-card">
+                    <div class="tabela-header">
+                        <h3 class="tabela-titulo">Últimos Leads</h3>
+                        <button id="btnAtualizarLeads" class="botao-atualizar">Atualizar</button>
+                    </div>
+                    <div class="tabela-container">
+                        <table class="tabela-dados" id="tabelaLeads">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>E-mail</th>
+                                    <th>Telefone</th>
+                                    <th>Tipo Evento</th>
+                                    <th>Cidade</th>
+                                    <th>Data</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaLeadsBody">
+                                <tr>
+                                    <td colspan="6" class="carregando">Carregando dados...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tabela-card">
+                    <div class="tabela-header">
+                        <h3 class="tabela-titulo">Top Países</h3>
+                        <button id="btnAtualizarPaises" class="botao-atualizar">Atualizar</button>
+                    </div>
+                    <div class="tabela-container">
+                        <table class="tabela-dados" id="tabelaPaises">
+                            <thead>
+                                <tr>
+                                    <th>País</th>
+                                    <th>Visitantes</th>
+                                    <th>Percentual</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaPaisesBody">
+                                <tr>
+                                    <td colspan="3" class="carregando">Carregando dados...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+        <div class="container">
+            <p class="footer-creditos">
+                Desenvolvido por 
+                <a href="https://agenciam2a.com.br/?utm_source=Dashboard-Site-Everton-Silva" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   class="footer-link">
+                    Jota / José Guilherme Pandolfi - Agência m2a
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Carregando dados...</p>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="scripts.js" defer></script>
+</body>
+</html>

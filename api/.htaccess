@@ -1,85 +1,287 @@
+# =============================================================================
+# ARQUIVO .HTACCESS - API EVERTON SILVA
+# Configurações completas para funcionamento das APIs e Dashboard
+# Desenvolvido por Jota / José Guilherme Pandolfi - Agência m2a
+# =============================================================================
+
 # ----------------- CONFIGURAÇÕES ESSENCIAIS -----------------
 # Ativar o motor de reescrita
 RewriteEngine On
 
 # Bloquear acesso a arquivos sensíveis
-<FilesMatch "^(\.htaccess|config\.php|funcoes\.php|\.env)">
+<FilesMatch "^(\.htaccess|config\.php|funcoes\.php|\.env|config-auth\.php)$">
     Require all denied
 </FilesMatch>
 
-# ----------------- SEGURANÇA AVANÇADA -----------------
-# Desativar listagem de diretórios
-Options -Indexes
-
-# Headers de segurança
-Header set X-Content-Type-Options "nosniff"
-Header set X-Frame-Options "DENY"
-Header set X-XSS-Protection "1; mode=block"
-Header set Referrer-Policy "strict-origin-when-cross-origin"
-
-# ----------------- CORS E API -----------------
-# Configuração CORS mais flexível
-Header always set Access-Control-Allow-Origin "https://evertonsilvaoficial.com.br"
-Header always set Access-Control-Allow-Methods "POST, OPTIONS, GET"
-Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
-Header always set Access-Control-Allow-Credentials "true"
-Header always set Vary "Origin"
-
-# Permitir pré-flight requests
-RewriteCond %{REQUEST_METHOD} OPTIONS
-RewriteRule ^(.*)$ $1 [R=200,L]
-
-# ----------------- CONFIGURAÇÕES PHP -----------------
-# Garantir que o header Authorization seja passado para o PHP
-SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
-
-# Configurações específicas para a API
+# ----------------- CONFIGURAÇÕES PHP BÁSICAS -----------------
+# Configurações de sessão e segurança
 php_value session.cookie_httponly 1
 php_value session.cookie_secure 1
 php_value session.use_strict_mode 1
+php_value session.cookie_samesite "Strict"
+php_value session.gc_maxlifetime 7200
+php_value session.cookie_lifetime 7200
 php_flag expose_php Off
 php_value error_reporting 1
 php_flag display_errors On
 php_flag log_errors On
 php_value error_log "../api_errors.log"
 
-# ----------------- PERMITIR REGISTRO DE VISITANTES -----------------
-# Garantir acesso ao endpoint de registro de visitantes
+# Garantir que o header Authorization seja passado para o PHP
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+
+# ----------------- CONFIGURAÇÕES CORS GLOBAIS -----------------
+# Headers CORS para todas as requisições
+Header always set Access-Control-Allow-Origin "https://evertonsilvaoficial.com.br"
+Header always set Access-Control-Allow-Methods "POST, GET, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+Header always set Access-Control-Allow-Credentials "true"
+Header always set Vary "Origin"
+
+# Headers de segurança globais
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-Frame-Options "DENY"
+Header always set X-XSS-Protection "1; mode=block"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'"
+
+# ----------------- TRATAMENTO DE REQUISIÇÕES OPTIONS -----------------
+# Responder adequadamente às requisições de preflight
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+# ----------------- APIS PRINCIPAIS (ORIGINAIS) -----------------
+# Permitir acesso completo às APIs principais do projeto
 <Files "registrar-visitante.php">
     Require all granted
-    SetEnvIf Origin "https://evertonsilvaoficial\.com\.br" IS_CORS=1
-    Header always set Access-Control-Allow-Origin "https://evertonsilvaoficial.com.br" env=IS_CORS
+    Header always set Cache-Control "no-cache, no-store, must-revalidate"
+    Header always set Pragma "no-cache"
+    Header always set Expires "0"
 </Files>
 
-# ----------------- PERMITIR PROCESSAMENTO DE FORMULÁRIO -----------------
-# Garantir acesso ao endpoint de processamento de formulário
 <Files "processar-formulario.php">
     Require all granted
-    SetEnvIf Origin "https://evertonsilvaoficial\.com\.br" IS_CORS=1
-    Header always set Access-Control-Allow-Origin "https://evertonsilvaoficial.com.br" env=IS_CORS
+    Header always set Cache-Control "no-cache, no-store, must-revalidate"
+    Header always set Pragma "no-cache"
+    Header always set Expires "0"
 </Files>
 
-# ----------------- PERMITIR REGISTRO DE CLIQUES -----------------
-# Garantir acesso ao endpoint de processamento de cliques
 <Files "registrar-clique.php">
     Require all granted
-    SetEnvIf Origin "https://evertonsilvaoficial\.com\.br" IS_CORS=1
-    Header always set Access-Control-Allow-Origin "https://evertonsilvaoficial.com.br" env=IS_CORS
+    Header always set Cache-Control "no-cache, no-store, must-revalidate"
+    Header always set Pragma "no-cache"
+    Header always set Expires "0"
 </Files>
 
+# ----------------- PASTA DE AUTENTICAÇÃO -----------------
+# Configurações específicas para /api/auth/
+<Directory "auth">
+    # Permitir acesso aos arquivos de autenticação
+    Require all granted
+    
+    # Headers específicos para autenticação
+    Header always set Cache-Control "no-cache, no-store, must-revalidate"
+    Header always set Pragma "no-cache"
+    Header always set Expires "0"
+    
+    # Configurações de segurança adicionais
+    <Files "*.php">
+        # Permitir apenas métodos necessários
+        <LimitExcept GET POST OPTIONS>
+            Require all denied
+        </LimitExcept>
+    </Files>
+</Directory>
+
+# ----------------- ENDPOINTS DE AUTENTICAÇÃO ESPECÍFICOS -----------------
+<Files "auth/login.php">
+    Require all granted
+    # Apenas POST e OPTIONS para login
+    <LimitExcept POST OPTIONS>
+        Require all denied
+    </LimitExcept>
+</Files>
+
+<Files "auth/logout.php">
+    Require all granted
+    # Apenas POST e OPTIONS para logout
+    <LimitExcept POST OPTIONS>
+        Require all denied
+    </LimitExcept>
+</Files>
+
+<Files "auth/verificar-sessao.php">
+    Require all granted
+    # GET e OPTIONS para verificação de sessão
+    <LimitExcept GET OPTIONS>
+        Require all denied
+    </LimitExcept>
+</Files>
+
+# ----------------- PASTA DO DASHBOARD -----------------
+# Configurações específicas para /api/dashboard/
+<Directory "dashboard">
+    # Permitir acesso aos endpoints do dashboard
+    Require all granted
+    
+    # Headers específicos para dashboard
+    Header always set Cache-Control "no-cache, no-store, must-revalidate"
+    Header always set Pragma "no-cache"
+    Header always set Expires "0"
+    
+    # Configurações de segurança
+    <Files "*.php">
+        # Permitir apenas GET e OPTIONS
+        <LimitExcept GET OPTIONS>
+            Require all denied
+        </LimitExcept>
+    </Files>
+</Directory>
+
+# ----------------- ENDPOINTS DO DASHBOARD ESPECÍFICOS -----------------
+<Files "dashboard/estatisticas.php">
+    Require all granted
+</Files>
+
+<Files "dashboard/visitantes.php">
+    Require all granted
+</Files>
+
+<Files "dashboard/leads.php">
+    Require all granted
+</Files>
+
+# ----------------- PROTEÇÃO ADICIONAL PARA DASHBOARD -----------------
+# Verificar referer apenas para APIs sensíveis do dashboard (opcional)
+# Comentado para evitar problemas, mas pode ser ativado se necessário
+# RewriteCond %{REQUEST_URI} ^/api/dashboard/
+# RewriteCond %{HTTP_REFERER} !^https://evertonsilvaoficial\.com\.br/dashboard/
+# RewriteCond %{REQUEST_METHOD} !OPTIONS
+# RewriteCond %{QUERY_STRING} !debug
+# RewriteRule ^.*$ - [F,L]
+
 # ----------------- LIMITAR MÉTODOS HTTP -----------------
-# Permitir apenas POST e OPTIONS para endpoints da API
-<LimitExcept POST OPTIONS GET>
+# Configuração global de métodos permitidos
+<LimitExcept GET POST OPTIONS>
     Require all denied
 </LimitExcept>
 
 # ----------------- FORÇAR HTTPS -----------------
+# Redirecionar HTTP para HTTPS
 RewriteCond %{HTTPS} !=on
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+# ----------------- PROTEÇÃO CONTRA ATAQUES -----------------
+# Proteção contra ataques básicos
+RewriteCond %{QUERY_STRING} [^a-zA-Z0-9_=&\-\[\]\.] [OR]
+RewriteCond %{QUERY_STRING} (\%3C|\%3E|script|javascript|vbscript) [NC,OR]
+RewriteCond %{QUERY_STRING} (union|select|insert|update|delete|drop) [NC,OR]
+RewriteCond %{QUERY_STRING} (%27|%22|%0A|%0D|%00) [NC,OR]
+RewriteCond %{QUERY_STRING} (localhost|127\.0\.0\.1|loopback) [NC]
+RewriteRule ^(.*)$ - [F,L]
+
+# Proteção contra User-Agent suspeito
+RewriteCond %{HTTP_USER_AGENT} ^$ [OR]
+RewriteCond %{HTTP_USER_AGENT} (curl|wget|python|bot|crawler|spider) [NC]
+RewriteCond %{REQUEST_URI} !debug
+RewriteRule ^(.*)$ - [F,L]
+
+# ----------------- CONFIGURAÇÕES DE CACHE -----------------
+# Configurações de expiração para diferentes tipos de arquivo
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # APIs - sem cache
+    ExpiresByType application/json "access plus 0 seconds"
+    ExpiresByType text/html "access plus 0 seconds"
+    
+    # CSS e JS - cache curto
+    ExpiresByType text/css "access plus 1 hour"
+    ExpiresByType application/javascript "access plus 1 hour"
+    
+    # Imagens - cache longo
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+</IfModule>
+
+# ----------------- COMPRESSÃO GZIP -----------------
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/json
+</IfModule>
+
+# ----------------- RATE LIMITING BÁSICO -----------------
+# Rate limiting para endpoints sensíveis
+<IfModule mod_rewrite.c>
+    # Implementar rate limiting básico para login
+    RewriteRule ^auth/login\.php$ - [E=RATELIMIT:1]
+    
+    # Implementar rate limiting para formulário
+    RewriteRule ^processar-formulario\.php$ - [E=RATELIMIT:1]
+</IfModule>
+
+# ----------------- CONFIGURAÇÕES DE SEGURANÇA AVANÇADA -----------------
+# Headers de segurança adicionais
+<IfModule mod_headers.c>
+    # HSTS (HTTP Strict Transport Security)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    
+    # Permissions Policy
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    
+    # Prevent MIME type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+</IfModule>
+
+# ----------------- LOGS DE SEGURANÇA -----------------
+<IfModule mod_log_config.c>
+    # Log customizado para tentativas de acesso bloqueadas
+    LogFormat "%h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" security
+    # CustomLog "../logs/security.log" security env=BLOCKED
+</IfModule>
+
 # ----------------- PÁGINAS DE ERRO PERSONALIZADAS -----------------
+# Páginas de erro customizadas (se existirem)
 ErrorDocument 400 /erros/400.php
 ErrorDocument 401 /erros/401.php
 ErrorDocument 403 /erros/403.php
 ErrorDocument 404 /erros/404.php
+ErrorDocument 429 /erros/429.php
 ErrorDocument 500 /erros/500.php
+
+# ----------------- CONFIGURAÇÕES FINAIS -----------------
+# Desabilitar server signature
+ServerSignature Off
+
+# Configurações de timeout
+<IfModule mod_reqtimeout.c>
+    RequestReadTimeout header=20-40,MinRate=500 body=20,MinRate=500
+</IfModule>
+
+# ----------------- DEBUG E DESENVOLVIMENTO -----------------
+# Permitir acesso a endpoints de debug quando necessário
+<Files "*/debug.php">
+    Require all granted
+</Files>
+
+# Permitir parâmetro debug nas URLs para testes
+RewriteCond %{QUERY_STRING} debug=1
+RewriteRule ^(.*)$ $1 [L]
+
+# ----------------- REDIRECIONAMENTOS ESPECÍFICOS -----------------
+# Redirecionar /api para /api/ se necessário
+RewriteRule ^api$ api/ [R=301,L]
+
+# ----------------- CONFIGURAÇÕES DE CHARSET -----------------
+# Definir charset padrão
+AddDefaultCharset UTF-8
