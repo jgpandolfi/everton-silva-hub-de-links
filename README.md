@@ -341,11 +341,10 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 <p align="center">
   <strong>🎵 Desenvolvido com ❤️ para Everton Silva</strong><br>
-  <em>Projeto demonstrativo de competências em desenvolvimento web full-stack</em>
 </p>
 
 <p align="center">
-  <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/usuario/everton-silva-website?style=flat-square">
-  <img alt="GitHub code size" src="https://img.shields.io/github/languages/code-size/usuario/everton-silva-website?style=flat-square">
-  <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/usuario/everton-silva-website?style=flat-square">
+  <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/jgpandolfi/everton-silva-hub-de-links?style=flat-square">
+  <img alt="GitHub code size" src="https://img.shields.io/github/languages/code-size/jgpandolfi/everton-silva-hub-de-links?style=flat-square">
+  <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/jgpandolfi/everton-silva-hub-de-links?style=flat-square">
 </p>
